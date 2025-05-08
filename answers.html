@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Interactive Webpage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: purple;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: white;
+        }
+
+        .animated-box {
+            width: 100px;
+            height: 100px;
+            background-color: coral;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
+        }
+
+        .animated-box.move {
+            transform: translateY(100px) rotate(360deg);
+            background-color: blue;
+            
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .dark-mode button {
+            background-color: #777;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>An Interactive Webpage</h1>
+
+    <label for="username">Enter your name:</label>
+    <input type="text" id="username" placeholder="Enter your name">
+    <button onclick="storeData()">Save Name</button>
+    <p id="displayName"></p>
+
+    <div id="box" class="animated-box">Move Me</div>
+    <button onclick="triggerAnimation()">Animate Box</button>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+    <script>
+        function storeData() {
+            const name = document.getElementById("username").value;
+            if (!name.trim()) {
+                alert("Please enter a valid name!");
+                return;
+            }
+            
+            localStorage.setItem("userName", name);
+            localStorage.setItem("timestamp", Date.now());
+
+            document.getElementById("displayName").textContent = "Hello, " + localStorage.getItem("userName") + "!";
+        }
+
+        function triggerAnimation() {
+            document.getElementById("box").classList.toggle("move");
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const storedName = localStorage.getItem("userName");
+            const timestamp = localStorage.getItem("timestamp");
+
+            if (storedName && timestamp) {
+                const elapsedTime = Date.now() - parseInt(timestamp);
+                if (elapsedTime > 300000) {  // Auto-clear after 5 minutes
+                    localStorage.removeItem("userName");
+                    localStorage.removeItem("timestamp");
+                } else {
+                    document.getElementById("displayName").textContent = "Welcome back, " + storedName + "!";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
